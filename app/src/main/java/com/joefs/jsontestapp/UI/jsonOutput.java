@@ -1,6 +1,8 @@
 package com.joefs.jsontestapp.UI;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,11 @@ public class jsonOutput extends AppCompatActivity {
     private TextView tvJSON;
     private Button bJSON;
     private String jsonObject;
+    private Context context;
+
+    public jsonOutput() {
+        this.context = jsonOutput.this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,74 +54,66 @@ public class jsonOutput extends AppCompatActivity {
     }
 
 
+
     public void outputGenerator(){
         tvJSON.setText(jsonObject);
     }
 
     public void saveJSON(){
-        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_LONG).show();
-        try {
             createFile(jsonObject);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to write to disk. Please try again.", Toast.LENGTH_LONG).show();
-        }
     }
 
-    public void createFile(String jsonObject) throws IOException {
+    public void createFile(String jsonObject){
 
-        JSONArray jsonDataArray = new JSONArray();
+        final JSONArray jsonDataArray = new JSONArray();
         jsonDataArray.put(jsonObject);
-//TODO - CHECK EMULATOR
-         File documentsDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+
+        //TODO - CHECK EMULATOR
+         final File documentsDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
         if (!documentsDir.exists()) {
             documentsDir.mkdirs();
         }
 
 
+        //Alert Message to save
+        String dialogTitle = "Confirm file write?";
+        String dialogMessage = "Are you sure you'd want to write the file in path: " +
+                documentsDir + "json_data.json" +
+                " with data: " +
+                jsonDataArray.toString() +
+                " ?";
 
-//        Toast.makeText(this,fullPath, Toast.LENGTH_LONG).show();
+        new AlertDialog.Builder(context)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMessage)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            writeToFile(documentsDir, jsonDataArray);
+                            Toast.makeText(context, "JSON File successfully written to disk", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            Toast.makeText(context, "Failed to write to disk", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }})
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }}).show();
 
-      //  OutputStream fOut = null;
-        //FileWriter file = new FileWriter(fullPath + "JSON_Data.json", false);
-//        FileWriter file = new FileWriter("JSON_Data.json", false);
-//        file.write(jsonDataArray.toString());
-//        if(file.exists())
-//            file.delete();
-//        file.createNewFile();
-//        fOut = new FileOutputStream(file);
-//        fOut.write(jsonDataArray.toString().getBytes());
-        // 100 means no compression, the lower you go, the stronger the compression
-        //image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-//        fOut.flush();
-//        fOut.close();
-//
-//        file.flush();
-//        file.close();
 
+    }
 
-
+    public void writeToFile(File documentsDir, JSONArray jsonDataArray) throws IOException {
         FileWriter fWriter;
         File file = new File(documentsDir, "json_data.json");
         Log.d("TAG", file.getPath());
         fWriter = new FileWriter(file, true);
-        Log.d("TAG1", "Just about to write: " + jsonObject);
-        fWriter.write("Test");
-        Log.d("TAG2", "Yay!");
+        fWriter.write(jsonDataArray.toString());
         fWriter.flush();
         fWriter.close();
-
-//        try {
-//
-//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("config.txt", Context.MODE_PRIVATE));
-//            outputStreamWriter.write("Hello");
-//            outputStreamWriter.close();
-//        }
-//        catch (IOException e) {
-//            Log.e("Exception", "File write failed: " + e.toString());
-//        }
-
-
-        Toast.makeText(this, "JSON File successfully written to disk with: " + jsonDataArray.toString().getBytes(), Toast.LENGTH_SHORT).show();
     }
+
 }
+
