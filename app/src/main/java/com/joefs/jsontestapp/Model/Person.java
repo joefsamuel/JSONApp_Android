@@ -1,13 +1,13 @@
 package com.joefs.jsontestapp.Model;
 
-public class PersonInfo{
+public class Person {
 
     private String name;
 private String email;
 private String phone;
 private String message;
 
-    public PersonInfo(String name, String email, String phone, String message) {
+    public Person(String name, String email, String phone, String message) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -44,5 +44,15 @@ private String message;
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

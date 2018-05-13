@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.joefs.jsontestapp.Model.PersonInfo;
+import com.joefs.jsontestapp.Model.Person;
 import com.joefs.jsontestapp.R;
 import com.joefs.jsontestapp.Utillity.PersonInfoUtil;
 
@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity{
     private EditText phone;
     private EditText message;
     private Button testJSON;
-    private PersonInfo person;
+    private Button uploadJSON;
+    private Person person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity{
         message = findViewById(R.id.etMessage);
 
 
-        testJSON = (Button) findViewById(R.id.Test_JSON);
+        testJSON = findViewById(R.id.Test_JSON);
         testJSON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        uploadJSON = findViewById(R.id.upload_json);
+        uploadJSON.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, uploadJson.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void retrieveForm(){
@@ -51,7 +60,7 @@ public class MainActivity extends AppCompatActivity{
         String Phone = phone.getText().toString();
         String Message = message.getText().toString();
         Log.i(TAG, "Received following information: " + "Name: " + Name + " Email: " + Email + " Phone: " + Phone + " Message: " + Message);
-        person = new PersonInfo(Name, Email, Phone, Message);
+        person = new Person(Name, Email, Phone, Message);
     }
 
 }

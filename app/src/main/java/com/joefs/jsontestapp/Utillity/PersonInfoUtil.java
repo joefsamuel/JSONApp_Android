@@ -1,13 +1,13 @@
 package com.joefs.jsontestapp.Utillity;
 
-import com.joefs.jsontestapp.Model.PersonInfo;
+import com.joefs.jsontestapp.Model.Person;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PersonInfoUtil {
 
-    public static String toJSON(PersonInfo person){
+    public static String toJSON(Person person){
         JSONObject newPerson = new JSONObject();
         try {
             newPerson.put("Name",person.getName());
